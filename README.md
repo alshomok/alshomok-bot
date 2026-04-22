@@ -34,7 +34,7 @@ A modern student assistant platform with AI-powered chat, file management, and T
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/student-assistant.git
+git clone https://github.com/ahmedgr047-code/alshomok-bot.git
 cd student-assistant
 ```
 

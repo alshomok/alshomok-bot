@@ -1,6 +1,6 @@
 import { StudentRepository } from '@/domain/repositories/student-repository';
 import { Student, CreateStudent, UpdateStudent } from '@/domain/entities/student';
-import { createServerClient } from '@/infrastructure/supabase';
+import { createClient as createServerClient } from '@/infrastructure/supabase/server';
 
 export class SupabaseStudentRepository implements StudentRepository {
   async findById(id: string): Promise<Student | null> {

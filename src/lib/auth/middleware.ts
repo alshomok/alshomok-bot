@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createServerClient } from '@/infrastructure/supabase';
+import { createClient as createServerClient } from '@/infrastructure/supabase/server';
 import { checkRateLimit, getRateLimitHeaders, DEFAULT_RATE_LIMITS } from '@/lib/services/rate-limiter';
 
 export interface AuthenticatedRequest extends NextRequest {

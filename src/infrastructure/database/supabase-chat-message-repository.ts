@@ -1,6 +1,6 @@
 import { ChatMessageRepository } from '@/domain/repositories/chat-message-repository';
 import { ChatMessageEntity, CreateChatMessage, ChatHistoryFilters } from '@/domain/entities/chat-message';
-import { createServerClient } from '@/infrastructure/supabase';
+import { createClient as createServerClient } from '@/infrastructure/supabase/server';
 
 export class SupabaseChatMessageRepository implements ChatMessageRepository {
   async findById(id: string): Promise<ChatMessageEntity | null> {

@@ -1,6 +1,6 @@
 import { FileRepository } from '@/domain/repositories/file-repository';
 import { FileEntity, CreateFile, UpdateFile, FileSearchFilters } from '@/domain/entities/file';
-import { createServerClient } from '@/infrastructure/supabase';
+import { createClient as createServerClient } from '@/infrastructure/supabase/server';
 
 export class SupabaseFileRepository implements FileRepository {
   async findById(id: string, userId?: string): Promise<FileEntity | null> {

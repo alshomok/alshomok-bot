@@ -5,7 +5,7 @@ import {
   UpdateAssignment,
   AssignmentStatus,
 } from '@/domain/entities/assignment';
-import { createServerClient } from '@/infrastructure/supabase';
+import { createClient as createServerClient } from '@/infrastructure/supabase/server';
 
 export class SupabaseAssignmentRepository implements AssignmentRepository {
   async findById(id: string): Promise<Assignment | null> {

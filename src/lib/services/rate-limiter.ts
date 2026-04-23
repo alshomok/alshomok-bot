@@ -1,4 +1,4 @@
-import { createServerClient } from '@/infrastructure/supabase';
+import { createClient as createServerClient } from '@/infrastructure/supabase/server';
 
 export interface RateLimitConfig {
   windowMs: number;

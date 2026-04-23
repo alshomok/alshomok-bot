@@ -26,8 +26,8 @@ export async function GET(req: NextRequest): Promise<NextResponse<ApiResponse<un
     }
 
     return NextResponse.json({ data: assignments });
-  } catch (error) {
-    console.error('Error fetching assignments:', error);
+  } catch {
+    console.error('Error fetching assignments');
     return NextResponse.json({ error: 'Failed to fetch assignments' }, { status: 500 });
   }
 }
@@ -39,8 +39,8 @@ export async function POST(req: NextRequest): Promise<NextResponse<ApiResponse<u
 
     const assignment = await assignmentUseCases.createAssignment(validatedData);
     return NextResponse.json({ data: assignment }, { status: 201 });
-  } catch (error) {
-    console.error('Error creating assignment:', error);
+  } catch {
+    console.error('Error creating assignment');
     return NextResponse.json({ error: 'Failed to create assignment' }, { status: 500 });
   }
 }

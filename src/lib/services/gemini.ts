@@ -31,11 +31,11 @@ export async function generateAIResponse(message: string): Promise<AIResponse> {
     const text = response.text();
 
     return { text };
-  } catch (error) {
-    console.error('Gemini API error:', error);
+  } catch (_error) {
+    console.error('Gemini API error');
     return {
       text: '',
-      error: error instanceof Error ? error.message : 'Failed to generate response',
+      error: _error instanceof Error ? _error.message : 'Failed to generate response',
     };
   }
 }
@@ -59,11 +59,11 @@ export async function generateAIResponseWithHistory(
     const text = response.text();
 
     return { text };
-  } catch (error) {
-    console.error('Gemini API error:', error);
+  } catch (_error) {
+    console.error('Gemini API error');
     return {
       text: '',
-      error: error instanceof Error ? error.message : 'Failed to generate response',
+      error: _error instanceof Error ? _error.message : 'Failed to generate response',
     };
   }
 }

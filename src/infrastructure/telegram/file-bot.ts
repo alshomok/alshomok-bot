@@ -195,8 +195,8 @@ export function setupFileBotHandlers(bot: Telegraf) {
         );
 
         clearSession(userId);
-      } catch (dbError) {
-        console.error('Database save error:', dbError);
+      } catch {
+        console.error('Database save error');
         await ctx.reply(
           `⚠️ File uploaded to storage but failed to save metadata.\n\n` +
             `You can access the file here:\n${fileUrl}\n\n` +
@@ -209,10 +209,10 @@ export function setupFileBotHandlers(bot: Telegraf) {
         );
         clearSession(userId);
       }
-    } catch (error) {
-      console.error('File upload error:', error);
+    } catch (_error) {
+      console.error('File upload error');
       await ctx.reply(
-        `❌ Error uploading file: ${error instanceof Error ? error.message : 'Unknown error'}\n\nPlease try again with /upload`
+        `❌ Error uploading file: ${_error instanceof Error ? _error.message : 'Unknown error'}\n\nPlease try again with /upload`
       );
       clearSession(userId);
     }
@@ -311,8 +311,8 @@ export function setupFileBotHandlers(bot: Telegraf) {
       message += `\n📂 View all files: ${env.NEXT_PUBLIC_APP_URL}/files`;
 
       await ctx.reply(message);
-    } catch (error) {
-      console.error('Search error:', error);
+    } catch {
+      console.error('Search error');
       await ctx.reply('❌ Error searching files. Please try again later.');
     }
   });

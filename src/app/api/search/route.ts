@@ -76,8 +76,8 @@ export async function GET(req: NextRequest): Promise<NextResponse<ApiResponse<un
       },
       message: `Found ${results.length} file${results.length !== 1 ? 's' : ''}`,
     });
-  } catch (error) {
-    console.error('Search API error:', error);
+  } catch {
+    console.error('Search API error');
     return NextResponse.json(
       { error: 'Failed to search files' },
       { status: 500 }
@@ -119,8 +119,8 @@ export async function POST(req: NextRequest): Promise<NextResponse<ApiResponse<u
       },
       message: `Found ${results.length} file${results.length !== 1 ? 's' : ''}`,
     });
-  } catch (error) {
-    console.error('Search API error:', error);
+  } catch {
+    console.error('Search API error');
     return NextResponse.json(
       { error: 'Failed to search files' },
       { status: 500 }

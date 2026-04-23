@@ -64,17 +64,8 @@ export async function POST(req: NextRequest): Promise<NextResponse<ApiResponse<u
       data: file,
       message: 'File uploaded successfully',
     }, { status: 201 });
-  } catch (error) {
-    console.error('Upload API error:', error);
-    
-    // Handle Zod validation errors
-    if (error instanceof Error && error.name === 'ZodError') {
-      return NextResponse.json(
-        { error: 'Validation failed', details: error.message },
-        { status: 400 }
-      );
-    }
-    
+  } catch {
+    console.error('Upload API error');
     return NextResponse.json(
       { error: 'Failed to upload file metadata' },
       { status: 500 }
@@ -139,8 +130,8 @@ export async function PATCH(req: NextRequest): Promise<NextResponse<ApiResponse<
       },
       message: `Uploaded ${results.length} of ${files.length} files`,
     }, { status: results.length > 0 ? 200 : 400 });
-  } catch (error) {
-    console.error('Bulk upload API error:', error);
+  } catch {
+    console.error('Bulk upload API error');
     return NextResponse.json(
       { error: 'Failed to process bulk upload' },
       { status: 500 }

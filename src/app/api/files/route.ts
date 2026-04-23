@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { FileUseCases } from '@/domain/use-cases';
 import { SupabaseFileRepository } from '@/infrastructure/database';
 import { createFileSchema } from '@/domain/entities/file';
@@ -54,8 +54,8 @@ async function getHandler(req: AuthenticatedRequest): Promise<NextResponse<ApiRe
         count: files.length,
       },
     });
-  } catch (error) {
-    console.error('Error fetching files:', error);
+  } catch {
+    console.error('Error fetching files');
     return NextResponse.json({ error: 'Failed to fetch files' }, { status: 500 });
   }
 }
@@ -104,8 +104,8 @@ async function postHandler(req: AuthenticatedRequest): Promise<NextResponse<ApiR
       },
       { status: 201 }
     );
-  } catch (error) {
-    console.error('Error creating file:', error);
+  } catch {
+    console.error('Error creating file');
     return NextResponse.json({ error: 'Failed to create file' }, { status: 500 });
   }
 }

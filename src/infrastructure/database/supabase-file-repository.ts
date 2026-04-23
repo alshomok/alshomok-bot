@@ -172,7 +172,7 @@ export class SupabaseFileRepository implements FileRepository {
 
     if (error || !data) return 0;
 
-    return data.reduce((total, file) => total + (file.size_bytes || 0), 0);
+    return data.reduce((total: number, file: { size_bytes: number | null }) => total + (file.size_bytes || 0), 0);
   }
 
   private mapToEntity(data: Record<string, unknown>): FileEntity {

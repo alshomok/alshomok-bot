@@ -16,8 +16,8 @@ export async function webhookHandler(req: NextRequest) {
     await bot.handleUpdate(body);
 
     return NextResponse.json({ ok: true });
-  } catch (error) {
-    console.error('Webhook error:', error);
+  } catch {
+    console.error('Webhook error');
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

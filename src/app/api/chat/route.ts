@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { generateAIResponse, generateAIResponseWithHistory, type AIResponse } from '@/lib/services';
 import { ChatMessageUseCases } from '@/domain/use-cases';
 import { SupabaseChatMessageRepository } from '@/infrastructure/database';
@@ -69,8 +69,8 @@ async function postHandler(req: AuthenticatedRequest): Promise<NextResponse<ApiR
         message,
         response.text
       );
-    } catch (dbError) {
-      console.error('Failed to save chat message:', dbError);
+    } catch {
+      console.error('Failed to save chat message');
       // Don't fail the request if saving fails
     }
 
@@ -80,8 +80,8 @@ async function postHandler(req: AuthenticatedRequest): Promise<NextResponse<ApiR
         timestamp: new Date().toISOString(),
       },
     });
-  } catch (error) {
-    console.error('Chat API error:', error);
+  } catch {
+    console.error('Chat API error');
     return NextResponse.json(
       { error: 'Failed to process chat request' },
       { status: 500 }
@@ -117,8 +117,8 @@ async function getHandler(req: AuthenticatedRequest): Promise<NextResponse<ApiRe
         count: messages.length,
       },
     });
-  } catch (error) {
-    console.error('Chat history fetch error:', error);
+  } catch {
+    console.error('Chat history fetch error');
     return NextResponse.json(
       { error: 'Failed to fetch chat history' },
       { status: 500 }

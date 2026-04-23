@@ -69,8 +69,8 @@ export async function extractFileMetadata(fileName: string): Promise<FileMetadat
         : null,
       type: parsed.type?.toLowerCase() || null,
     };
-  } catch (error) {
-    console.error('Gemini metadata extraction error:', error);
+  } catch {
+    console.error('Gemini metadata extraction error');
     // Return null values if extraction fails
     return {
       subject: null,

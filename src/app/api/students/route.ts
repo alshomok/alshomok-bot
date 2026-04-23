@@ -11,8 +11,8 @@ export async function GET(): Promise<NextResponse<ApiResponse<unknown>>> {
   try {
     const students = await studentUseCases.getAllStudents();
     return NextResponse.json({ data: students });
-  } catch (error) {
-    console.error('Error fetching students:', error);
+  } catch {
+    console.error('Error fetching students');
     return NextResponse.json({ error: 'Failed to fetch students' }, { status: 500 });
   }
 }
@@ -24,8 +24,8 @@ export async function POST(req: NextRequest): Promise<NextResponse<ApiResponse<u
 
     const student = await studentUseCases.registerStudent(validatedData);
     return NextResponse.json({ data: student }, { status: 201 });
-  } catch (error) {
-    console.error('Error creating student:', error);
+  } catch {
+    console.error('Error creating student');
     return NextResponse.json({ error: 'Failed to create student' }, { status: 500 });
   }
 }

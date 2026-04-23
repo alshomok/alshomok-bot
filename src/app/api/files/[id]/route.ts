@@ -19,8 +19,8 @@ export async function GET(
     }
 
     return NextResponse.json({ data: file });
-  } catch (error) {
-    console.error('Error fetching file:', error);
+  } catch {
+    console.error('Error fetching file');
     return NextResponse.json({ error: 'Failed to fetch file' }, { status: 500 });
   }
 }
@@ -35,8 +35,8 @@ export async function PATCH(
 
     const file = await fileUseCases.updateFile(params.id, validatedData);
     return NextResponse.json({ data: file });
-  } catch (error) {
-    console.error('Error updating file:', error);
+  } catch {
+    console.error('Error updating file');
     return NextResponse.json({ error: 'Failed to update file' }, { status: 500 });
   }
 }
@@ -48,8 +48,8 @@ export async function DELETE(
   try {
     await fileUseCases.deleteFile(params.id);
     return NextResponse.json({ message: 'File deleted successfully' });
-  } catch (error) {
-    console.error('Error deleting file:', error);
+  } catch {
+    console.error('Error deleting file');
     return NextResponse.json({ error: 'Failed to delete file' }, { status: 500 });
   }
 }

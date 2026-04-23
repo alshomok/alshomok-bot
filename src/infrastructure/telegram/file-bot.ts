@@ -19,29 +19,6 @@ interface UserSession {
 
 const userSessions = new Map<number, UserSession>();
 
-const SUBJECT_OPTIONS = [
-  ['Database', 'Programming'],
-  ['Math', 'Physics'],
-  ['Chemistry', 'Biology'],
-  ['History', 'English'],
-  ['Computer Science', 'AI & ML'],
-  ['Networking', 'Security'],
-  ['Other'],
-];
-
-const SEMESTER_OPTIONS = [
-  ['1', '2', '3', '4'],
-  ['5', '6', '7', '8'],
-];
-
-const FILE_TYPE_OPTIONS = [
-  ['sheet', 'notes'],
-  ['assignment', 'exam'],
-  ['pdf', 'book'],
-  ['lab', 'project'],
-  ['other'],
-];
-
 function getOrCreateSession(userId: number): UserSession {
   if (!userSessions.has(userId)) {
     userSessions.set(userId, { state: 'idle' });
@@ -142,7 +119,7 @@ export function setupFileBotHandlers(bot: Telegraf) {
 
       // Upload to Supabase Storage
       const filePath = `uploads/${userId}/${Date.now()}_${session.fileName}`;
-      const { data: uploadData, error: uploadError } = await supabaseAdmin.storage
+      const { error: uploadError } = await supabaseAdmin.storage
         .from('files')
         .upload(filePath, fileBuffer, {
           contentType: session.mimeType,

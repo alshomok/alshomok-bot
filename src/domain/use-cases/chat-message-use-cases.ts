@@ -1,5 +1,5 @@
 import { ChatMessageRepository } from '../repositories/chat-message-repository';
-import { ChatMessageEntity, CreateChatMessage, ChatHistoryFilters } from '../entities/chat-message';
+import { ChatMessageEntity, ChatHistoryFilters } from '../entities/chat-message';
 
 export class ChatMessageUseCases {
   constructor(private readonly chatMessageRepository: ChatMessageRepository) {}

@@ -3,7 +3,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Search, FileText, MoreHorizontal, Loader2 } from '@/components/ui/icons';
 import { cn } from '@/lib/utils';
-import { FileEntity } from '@/domain/entities';
 
 interface FileItem {
   id: string;

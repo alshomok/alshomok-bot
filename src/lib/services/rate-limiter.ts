@@ -49,7 +49,6 @@ export async function checkRateLimit(
   }
 
   let requestsCount = 1;
-  let recordId: string | undefined;
 
   if (existing) {
     const recordWindowStart = new Date(existing.window_start);
@@ -68,7 +67,6 @@ export async function checkRateLimit(
       if (updateError) {
         console.error('Rate limit update error:', updateError);
       }
-      recordId = existing.id;
     } else {
       // Increment counter
       requestsCount = existing.requests_count + 1;
@@ -80,11 +78,10 @@ export async function checkRateLimit(
       if (updateError) {
         console.error('Rate limit update error:', updateError);
       }
-      recordId = existing.id;
     }
   } else {
     // Create new record
-    const { data: inserted, error: insertError } = await supabase
+    const { error: insertError } = await supabase
       .from('rate_limits')
       .insert({
         user_id: userId,
@@ -97,8 +94,6 @@ export async function checkRateLimit(
 
     if (insertError) {
       console.error('Rate limit insert error:', insertError);
-    } else {
-      recordId = inserted?.id;
     }
   }
 

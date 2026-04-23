@@ -32,7 +32,7 @@ export async function GET(req: NextRequest): Promise<NextResponse<ApiResponse<un
     const type = searchParams.get('type');
 
     let results;
-    let searchInfo: SearchFilters = {};
+    const searchInfo: SearchFilters = {};
 
     // Natural language search takes priority
     if (query) {

@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { StudentUseCases } from '@/domain/use-cases';
 import { SupabaseStudentRepository } from '@/infrastructure/database';
 import { createStudentSchema } from '@/domain/entities/student';

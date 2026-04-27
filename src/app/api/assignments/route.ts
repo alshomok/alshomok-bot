@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { AssignmentUseCases } from '@/domain/use-cases';
 import { SupabaseAssignmentRepository } from '@/infrastructure/database';
 import { createAssignmentSchema, assignmentStatusSchema } from '@/domain/entities/assignment';

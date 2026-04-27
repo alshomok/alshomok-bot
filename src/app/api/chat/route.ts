@@ -3,7 +3,6 @@ import { generateAIResponse, generateAIResponseWithHistory, type AIResponse } fr
 import { ChatMessageUseCases } from '@/domain/use-cases';
 import { SupabaseChatMessageRepository } from '@/infrastructure/database';
 import { createClient as createServerClient } from '@/infrastructure/supabase/server';
-import { checkRateLimit, getRateLimitHeaders } from '@/lib/services/rate-limiter';
 import { ApiResponse } from '@/shared/types';
 
 const chatMessageRepository = new SupabaseChatMessageRepository();
@@ -139,10 +138,10 @@ async function getHandler(req: NextRequest): Promise<NextResponse<ApiResponse<un
 
 // Export handlers with inline auth - use standard Request type for Next.js App Router
 export async function POST(request: Request) {
-  return postHandler(request as any);
+  return postHandler(request as unknown as NextRequest);
 }
 
 export async function GET(request: Request) {
-  return getHandler(request as any);
+  return getHandler(request as unknown as NextRequest);
 }
 

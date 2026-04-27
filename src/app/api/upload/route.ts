@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { FileUseCases } from '@/domain/use-cases';
 import { SupabaseFileRepository } from '@/infrastructure/database';
 import { createFileSchema, type CreateFile } from '@/domain/entities/file';

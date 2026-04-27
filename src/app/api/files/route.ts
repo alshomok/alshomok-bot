@@ -122,9 +122,9 @@ async function postHandler(req: NextRequest): Promise<NextResponse<ApiResponse<u
 
 // Export handlers - use standard Request type for Next.js App Router
 export async function GET(request: Request) {
-  return getHandler(request as any);
+  return getHandler(request as unknown as NextRequest);
 }
 
 export async function POST(request: Request) {
-  return postHandler(request as any);
+  return postHandler(request as unknown as NextRequest);
 }

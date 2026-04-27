@@ -23,9 +23,9 @@ interface SearchFilters {
  * - semester: Filter by semester (number)
  * - type: Filter by file type
  */
-export async function GET(req: NextRequest): Promise<NextResponse<ApiResponse<unknown>>> {
+export async function GET(request: Request): Promise<NextResponse<ApiResponse<unknown>>> {
   try {
-    const { searchParams } = new URL(req.url);
+    const { searchParams } = new URL(request.url);
     const query = searchParams.get('q');
     const subject = searchParams.get('subject');
     const semester = searchParams.get('semester');
@@ -89,9 +89,9 @@ export async function GET(req: NextRequest): Promise<NextResponse<ApiResponse<un
  * POST /api/search
  * Advanced search with body parameters
  */
-export async function POST(req: NextRequest): Promise<NextResponse<ApiResponse<unknown>>> {
+export async function POST(request: Request): Promise<NextResponse<ApiResponse<unknown>>> {
   try {
-    const body = await req.json();
+    const body = await request.json();
     const { query, subject, semester, type, keywords } = body;
 
     let results;

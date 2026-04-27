@@ -1,8 +1,8 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { FileUseCases } from '@/domain/use-cases';
 import { SupabaseFileRepository } from '@/infrastructure/database';
 import { createFileSchema } from '@/domain/entities/file';
-import { withAuthAndRateLimit, AuthenticatedRequest } from '@/lib/auth/middleware';
+import { createClient as createServerClient } from '@/infrastructure/supabase/server';
 import { ApiResponse } from '@/shared/types';
 
 const fileRepository = new SupabaseFileRepository();
@@ -13,12 +13,17 @@ const fileUseCases = new FileUseCases(fileRepository);
  * List user's files with optional filtering
  * Rate limit: 30 requests per minute per user
  */
-async function getHandler(req: AuthenticatedRequest): Promise<NextResponse<ApiResponse<unknown>>> {
+async function getHandler(req: NextRequest): Promise<NextResponse<ApiResponse<unknown>>> {
   try {
-    const userId = req.user?.id;
-    if (!userId) {
+    // Auth check
+    const supabase = await createServerClient();
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    
+    if (authError || !user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
+    
+    const userId = user.id;
 
     const { searchParams } = new URL(req.url);
     const query = searchParams.get('q');
@@ -65,12 +70,17 @@ async function getHandler(req: AuthenticatedRequest): Promise<NextResponse<ApiRe
  * Upload file metadata
  * Rate limit: 10 uploads per hour per user
  */
-async function postHandler(req: AuthenticatedRequest): Promise<NextResponse<ApiResponse<unknown>>> {
+async function postHandler(req: NextRequest): Promise<NextResponse<ApiResponse<unknown>>> {
   try {
-    const userId = req.user?.id;
-    if (!userId) {
+    // Auth check
+    const supabase = await createServerClient();
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    
+    if (authError || !user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
+    
+    const userId = user.id;
 
     const body = await req.json();
 
@@ -110,6 +120,11 @@ async function postHandler(req: AuthenticatedRequest): Promise<NextResponse<ApiR
   }
 }
 
-// Export wrapped handlers with auth and rate limiting
-export const GET = withAuthAndRateLimit(getHandler, 'search');
-export const POST = withAuthAndRateLimit(postHandler, 'upload');
+// Export handlers - use standard Request type for Next.js App Router
+export async function GET(request: Request) {
+  return getHandler(request as any);
+}
+
+export async function POST(request: Request) {
+  return postHandler(request as any);
+}

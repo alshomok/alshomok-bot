@@ -26,9 +26,9 @@ interface UploadRequest {
  * - type: string (optional)
  * - fileUrl: string (required)
  */
-export async function POST(req: NextRequest): Promise<NextResponse<ApiResponse<unknown>>> {
+export async function POST(request: Request): Promise<NextResponse<ApiResponse<unknown>>> {
   try {
-    const body: UploadRequest = await req.json();
+    const body: UploadRequest = await request.json();
 
     // Validate required fields
     if (!body.title || typeof body.title !== 'string') {
@@ -93,9 +93,9 @@ export async function GET(): Promise<NextResponse<ApiResponse<unknown>>> {
  * PATCH /api/upload
  * Bulk upload multiple files
  */
-export async function PATCH(req: NextRequest): Promise<NextResponse<ApiResponse<unknown>>> {
+export async function PATCH(request: Request): Promise<NextResponse<ApiResponse<unknown>>> {
   try {
-    const body = await req.json();
+    const body = await request.json();
     const { files } = body;
 
     if (!Array.isArray(files) || files.length === 0) {

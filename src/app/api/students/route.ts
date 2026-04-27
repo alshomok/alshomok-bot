@@ -17,9 +17,9 @@ export async function GET(): Promise<NextResponse<ApiResponse<unknown>>> {
   }
 }
 
-export async function POST(req: NextRequest): Promise<NextResponse<ApiResponse<unknown>>> {
+export async function POST(request: Request): Promise<NextResponse<ApiResponse<unknown>>> {
   try {
-    const body = await req.json();
+    const body = await request.json();
     const validatedData = createStudentSchema.parse(body);
 
     const student = await studentUseCases.registerStudent(validatedData);

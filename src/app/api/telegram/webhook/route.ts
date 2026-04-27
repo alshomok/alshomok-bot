@@ -1,6 +1,5 @@
-import { NextRequest } from 'next/server';
 import { webhookHandler } from '@/infrastructure/telegram';
 
-export async function POST(req: NextRequest) {
-  return webhookHandler(req);
+export async function POST(request: Request) {
+  return webhookHandler(request as any);
 }

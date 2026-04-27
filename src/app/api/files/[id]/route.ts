@@ -8,7 +8,7 @@ const fileRepository = new SupabaseFileRepository();
 const fileUseCases = new FileUseCases(fileRepository);
 
 export async function GET(
-  req: NextRequest,
+  request: Request,
   { params }: { params: { id: string } }
 ): Promise<NextResponse<ApiResponse<unknown>>> {
   try {
@@ -26,11 +26,11 @@ export async function GET(
 }
 
 export async function PATCH(
-  req: NextRequest,
+  request: Request,
   { params }: { params: { id: string } }
 ): Promise<NextResponse<ApiResponse<unknown>>> {
   try {
-    const body = await req.json();
+    const body = await request.json();
     const validatedData = updateFileSchema.parse(body);
 
     const file = await fileUseCases.updateFile(params.id, validatedData);
@@ -42,7 +42,7 @@ export async function PATCH(
 }
 
 export async function DELETE(
-  req: NextRequest,
+  request: Request,
   { params }: { params: { id: string } }
 ): Promise<NextResponse<ApiResponse<unknown>>> {
   try {

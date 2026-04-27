@@ -7,9 +7,9 @@ import { ApiResponse } from '@/shared/types';
 const assignmentRepository = new SupabaseAssignmentRepository();
 const assignmentUseCases = new AssignmentUseCases(assignmentRepository);
 
-export async function GET(req: NextRequest): Promise<NextResponse<ApiResponse<unknown>>> {
+export async function GET(request: Request): Promise<NextResponse<ApiResponse<unknown>>> {
   try {
-    const { searchParams } = new URL(req.url);
+    const { searchParams } = new URL(request.url);
     const studentId = searchParams.get('studentId');
     const status = searchParams.get('status');
 
@@ -32,9 +32,9 @@ export async function GET(req: NextRequest): Promise<NextResponse<ApiResponse<un
   }
 }
 
-export async function POST(req: NextRequest): Promise<NextResponse<ApiResponse<unknown>>> {
+export async function POST(request: Request): Promise<NextResponse<ApiResponse<unknown>>> {
   try {
-    const body = await req.json();
+    const body = await request.json();
     const validatedData = createAssignmentSchema.parse(body);
 
     const assignment = await assignmentUseCases.createAssignment(validatedData);

@@ -1,8 +1,9 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { generateAIResponse, generateAIResponseWithHistory, type AIResponse } from '@/lib/services';
 import { ChatMessageUseCases } from '@/domain/use-cases';
 import { SupabaseChatMessageRepository } from '@/infrastructure/database';
-import { withAuthAndRateLimit, AuthenticatedRequest } from '@/lib/auth/middleware';
+import { createClient as createServerClient } from '@/infrastructure/supabase/server';
+import { checkRateLimit, getRateLimitHeaders } from '@/lib/services/rate-limiter';
 import { ApiResponse } from '@/shared/types';
 
 const chatMessageRepository = new SupabaseChatMessageRepository();
@@ -23,12 +24,17 @@ interface ChatRequest {
  * Handles AI chat requests with authentication and rate limiting
  * Rate limit: 20 requests per minute per user
  */
-async function postHandler(req: AuthenticatedRequest): Promise<NextResponse<ApiResponse<unknown>>> {
+async function postHandler(req: NextRequest): Promise<NextResponse<ApiResponse<unknown>>> {
   try {
-    const userId = req.user?.id;
-    if (!userId) {
+    // Auth check
+    const supabase = await createServerClient();
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    
+    if (authError || !user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
+    
+    const userId = user.id;
 
     const body: ChatRequest = await req.json();
     const { message, history } = body;
@@ -94,12 +100,17 @@ async function postHandler(req: AuthenticatedRequest): Promise<NextResponse<ApiR
  * Fetch chat history for logged-in user
  * Rate limit: 30 requests per minute per user
  */
-async function getHandler(req: AuthenticatedRequest): Promise<NextResponse<ApiResponse<unknown>>> {
+async function getHandler(req: NextRequest): Promise<NextResponse<ApiResponse<unknown>>> {
   try {
-    const userId = req.user?.id;
-    if (!userId) {
+    // Auth check
+    const supabase = await createServerClient();
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    
+    if (authError || !user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
+    
+    const userId = user.id;
 
     const { searchParams } = new URL(req.url);
     const limit = parseInt(searchParams.get('limit') || '50', 10);
@@ -126,14 +137,12 @@ async function getHandler(req: AuthenticatedRequest): Promise<NextResponse<ApiRe
   }
 }
 
-// Export wrapped handlers with auth and rate limiting
-export async function POST(req: AuthenticatedRequest) {
-  const handler = await withAuthAndRateLimit(postHandler, 'chat');
-  return handler(req);
+// Export handlers with inline auth
+export async function POST(req: NextRequest) {
+  return postHandler(req);
 }
 
-export async function GET(req: AuthenticatedRequest) {
-  const handler = await withAuthAndRateLimit(getHandler, 'search');
-  return handler(req);
+export async function GET(req: NextRequest) {
+  return getHandler(req);
 }
 

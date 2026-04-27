@@ -1,7 +1,8 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { FileUseCases } from '@/domain/use-cases';
 import { SupabaseFileRepository } from '@/infrastructure/database';
 import { createFileSchema, type CreateFile } from '@/domain/entities/file';
+import { createClient as createServerClient } from '@/infrastructure/supabase/server';
 import { ApiResponse } from '@/shared/types';
 
 const fileRepository = new SupabaseFileRepository();
@@ -28,6 +29,14 @@ interface UploadRequest {
  */
 export async function POST(request: Request): Promise<NextResponse<ApiResponse<unknown>>> {
   try {
+    // Auth check
+    const supabase = await createServerClient();
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    
+    if (authError || !user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
     const body: UploadRequest = await request.json();
 
     // Validate required fields
@@ -47,11 +56,14 @@ export async function POST(request: Request): Promise<NextResponse<ApiResponse<u
 
     // Prepare data for validation
     const fileData: CreateFile = {
+      userId: user.id,
       title: body.title,
       subject: body.subject || null,
       semester: body.semester || null,
       type: body.type || null,
       fileUrl: body.fileUrl,
+      storagePath: null,
+      sizeBytes: null,
     };
 
     // Validate with Zod schema
@@ -95,6 +107,14 @@ export async function GET(): Promise<NextResponse<ApiResponse<unknown>>> {
  */
 export async function PATCH(request: Request): Promise<NextResponse<ApiResponse<unknown>>> {
   try {
+    // Auth check
+    const supabase = await createServerClient();
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    
+    if (authError || !user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
     const body = await request.json();
     const { files } = body;
 
@@ -110,7 +130,18 @@ export async function PATCH(request: Request): Promise<NextResponse<ApiResponse<
 
     for (const file of files) {
       try {
-        const validatedData = createFileSchema.parse(file);
+        // Add required fields if missing
+        const fileData: CreateFile = {
+          userId: user.id,
+          title: file.title,
+          subject: file.subject || null,
+          semester: file.semester || null,
+          type: file.type || null,
+          fileUrl: file.fileUrl,
+          storagePath: file.storagePath || null,
+          sizeBytes: file.sizeBytes || null,
+        };
+        const validatedData = createFileSchema.parse(fileData);
         const savedFile = await fileUseCases.uploadFileMetadata(validatedData);
         results.push(savedFile);
       } catch (err) {

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { FileUseCases } from '@/domain/use-cases';
 import { SupabaseFileRepository } from '@/infrastructure/database';
-import { createFileSchema } from '@/domain/entities/file';
+import { createFileSchema, type CreateFile } from '@/domain/entities/file';
 import { createClient as createServerClient } from '@/infrastructure/supabase/server';
 import { ApiResponse } from '@/shared/types';
 
@@ -84,10 +84,16 @@ async function postHandler(req: NextRequest): Promise<NextResponse<ApiResponse<u
 
     const body = await req.json();
 
-    // Validate file data
+    // Validate file data - ensure all required fields
     const validatedData = createFileSchema.parse({
-      ...body,
-      userId, // Associate with current user
+      userId,
+      title: body.title,
+      subject: body.subject || null,
+      semester: body.semester || null,
+      type: body.type || null,
+      fileUrl: body.fileUrl,
+      storagePath: body.storagePath || null,
+      sizeBytes: body.sizeBytes || null,
     });
 
     // Check storage limits (example: 100MB for free tier)

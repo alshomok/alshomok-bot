@@ -126,22 +126,6 @@ async function getHandler(req: AuthenticatedRequest): Promise<NextResponse<ApiRe
   }
 }
 
-/**
- * Health check endpoint (public)
- */
-export async function GET_HEALTH(): Promise<NextResponse<ApiResponse<unknown>>> {
-  return NextResponse.json({
-    data: {
-      status: 'Chat API is running',
-      model: 'gemini-1.5-flash',
-      endpoints: {
-        POST: 'Send a message with optional history (requires auth)',
-        GET: 'Fetch chat history (requires auth)',
-      },
-    },
-  });
-}
-
 // Export wrapped handlers with auth and rate limiting
 export const POST = withAuthAndRateLimit(postHandler, 'chat');
 export const GET = withAuthAndRateLimit(getHandler, 'search');
